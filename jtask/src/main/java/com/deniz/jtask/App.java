@@ -122,7 +122,7 @@ public class App
     	//Class[] 
     	
     	CommandExecuter ce = new CommandExecuter();
-    	ce.execute("CreateAddress");
+    	ce.execute("CreateCustomer");
     	
     	
 	}

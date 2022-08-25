@@ -26,7 +26,7 @@ public class CommandExecuter {
 				Class<?> cls = Class.forName(className);	
 				Constructor<?> constructor =
 				        cls.getConstructor(new Class[]{String.class});
-				Customer newCustomer = (Customer) constructor.newInstance(":)))");
+				Customer newCustomer = (Customer) constructor.newInstance("Reflection");
 				Method mtd = cls.getDeclaredMethod("create", Customer.class);				
 				mtd.invoke(newCustomer, newCustomer);
 			} catch (Exception e) {
