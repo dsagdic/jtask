@@ -1,15 +1,8 @@
 package com.deniz.jtask;
 
-
-
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class App 
 {
@@ -89,51 +82,50 @@ public class App
     	}
     	System.out.println("*******************");
     	*/
+    	/*
+    	String cls = "Customer";
+    	String mtd = "public static void com.deniz.jtask.AppDao.create(java.lang.Object)";
+    	
+    	
+
+
+			try {
+				Method mtd1 = Object.class.getDeclaredMethod(mtd, Object.class);
+				mtd1.invoke(null, new Customer("Deniz from Reflection1"));
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+	    	
+
+    	
+    	/*Method[] methods = AppDao.class.getDeclaredMethods();
+    	
+    	for(Method method: methods) {
+    		System.out.println(method.toString());
+    	}
+    	
+    	try {
+            Class<?> cls = Class.forName("com.deniz.jtask.Customer");
+             Constructor<?> ct 
+               = cls.getConstructor(String.class);
+             
+             System.out.println(ct.newInstance("Deniz").toString());
+
+          }
+          catch (Throwable e) {
+             System.err.println(e);
+          }*/
+    	
+    	//methods[2].invoke(, args)
+    	
+    	//Class[] 
+    	
+    	CommandExecuter ce = new CommandExecuter();
+    	ce.execute("CreateAddress");
+    	
+    	
 	}
     
-    public static void create(Object object) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
-		session.save(object);
-		session.getTransaction().commit();
-		session.close();
-    }
     
-    public static <T> List<T> getAll(Class<T> cls) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
-    	CriteriaBuilder builder = session.getCriteriaBuilder();
-    	CriteriaQuery<T> criteria = builder.createQuery(cls);
-    	Root<T> root = criteria.from(cls);
-    	criteria.select(root);
-    	Query<T> query = session.createQuery(criteria);
-    	List<T> results = query.getResultList();
-		session.close();
-
-    	return results;
-    }
-
-    public static <T> Object getById(int id, Class<T> cls) {
-    	Object obj = null;
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        
-        obj = (Object) session.get(cls, id);
-        session.close();
-        return obj;
-	}
-    
-    public static void update(Object object) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.update(object);
-        session.getTransaction().commit();
-        session.close();
-      }
-    
-    public static void delete(Object object) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.delete(object);
-        session.getTransaction().commit();
-        session.close();
-      }
 }

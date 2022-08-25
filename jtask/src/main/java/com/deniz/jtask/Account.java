@@ -1,11 +1,19 @@
 package com.deniz.jtask;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 @Entity
 @Table(name = "Account")
@@ -60,6 +68,50 @@ public class Account {
 	public String toString() {
 		return "Account Id: " + this.accountId + " Account Type: " + this.accountType + " Account Balance: " + this.accountBalance + " Customer Id: " + this.customerId;
 	}
+	
+	public void create(Account object) {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+		session.save(object);
+		session.getTransaction().commit();
+		session.close();
+    }
+	
+	public List<Account> getAll() {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	CriteriaBuilder builder = session.getCriteriaBuilder();
+    	CriteriaQuery<Account> criteria = builder.createQuery(Account.class);
+    	Root<Account> root = criteria.from(Account.class);
+    	criteria.select(root);
+    	Query<Account> query = session.createQuery(criteria);
+    	List<Account> results = query.getResultList();
+		session.close();
+
+    	return results;
+    }
+	
+    public Account getById(int id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();        
+        Account obj = (Account) session.get(Account.class, id);
+        session.close();
+        return obj;
+	}
+    
+    public static void update(Account object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.update(object);
+        session.getTransaction().commit();
+        session.close();
+    }
+    
+    public static void delete(Account object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.delete(object);
+        session.getTransaction().commit();
+        session.close();
+    }
 	
 	public Account() {
 		   

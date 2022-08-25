@@ -1,11 +1,19 @@
 package com.deniz.jtask;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 @Entity
 @Table(name = "Telephone")
@@ -60,6 +68,50 @@ public class Telephone {
 	public String toString() {
 		return "Telephone Id: " + this.telephoneId + " Telephone Type: " + this.telephoneType + " Telephone No: " + this.telephoneNo + " Customer Id: " + this.customerId;
 	}
+	
+	public void create(Telephone object) {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+		session.save(object);
+		session.getTransaction().commit();
+		session.close();
+    }
+	
+	public List<Telephone> getAll() {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	CriteriaBuilder builder = session.getCriteriaBuilder();
+    	CriteriaQuery<Telephone> criteria = builder.createQuery(Telephone.class);
+    	Root<Telephone> root = criteria.from(Telephone.class);
+    	criteria.select(root);
+    	Query<Telephone> query = session.createQuery(criteria);
+    	List<Telephone> results = query.getResultList();
+		session.close();
+
+    	return results;
+    }
+	
+    public Telephone getById(int id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();        
+        Telephone obj = (Telephone) session.get(Telephone.class, id);
+        session.close();
+        return obj;
+	}
+    
+    public static void update(Telephone object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.update(object);
+        session.getTransaction().commit();
+        session.close();
+    }
+    
+    public static void delete(Telephone object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.delete(object);
+        session.getTransaction().commit();
+        session.close();
+    }
 	
 	public Telephone() {
 		   

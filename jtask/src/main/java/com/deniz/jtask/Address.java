@@ -1,11 +1,19 @@
 package com.deniz.jtask;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 @Entity
 @Table(name = "Address")
@@ -93,6 +101,50 @@ public class Address {
 	public String toString() {
 		return "Address Id: " + this.addressId + " Full Address: " + this.fullAddress + " County: " + this.county + " Province: " + this.province + " Region: " + this.region + " Country: " + this.country + " Customer Id: " + this.customerId;
 	}
+	
+	public void create(Address object) {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+		session.save(object);
+		session.getTransaction().commit();
+		session.close();
+    }
+	
+	public List<Address> getAll() {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	CriteriaBuilder builder = session.getCriteriaBuilder();
+    	CriteriaQuery<Address> criteria = builder.createQuery(Address.class);
+    	Root<Address> root = criteria.from(Address.class);
+    	criteria.select(root);
+    	Query<Address> query = session.createQuery(criteria);
+    	List<Address> results = query.getResultList();
+		session.close();
+
+    	return results;
+    }
+	
+    public Address getById(int id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();        
+        Address obj = (Address) session.get(Address.class, id);
+        session.close();
+        return obj;
+	}
+    
+    public static void update(Address object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.update(object);
+        session.getTransaction().commit();
+        session.close();
+    }
+    
+    public static void delete(Address object) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.delete(object);
+        session.getTransaction().commit();
+        session.close();
+    }
 	
 	public Address() {
 		   
